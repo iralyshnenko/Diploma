@@ -18,6 +18,7 @@ class TeacherModel(Model):
     def create(session, data):
         teacher = TeacherModel(login=data['login'], password=data['password'], fio=data['fio'])
         session.add(teacher)
+        return TeacherModel.serialize(teacher)
 
     @staticmethod
     def update(session, teacher_id, data):
@@ -25,11 +26,13 @@ class TeacherModel(Model):
         teacher.login = data['login']
         teacher.password = data['password']
         teacher.fio = data['fio']
+        return TeacherModel.serialize(teacher)
 
     @staticmethod
     def delete(session, teacher_id):
         teacher = session.query(TeacherModel).filter(TeacherModel.id == teacher_id).first()
         session.delete(teacher)
+        return TeacherModel.serialize(teacher)
 
     @staticmethod
     def serialize(obj):

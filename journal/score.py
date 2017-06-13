@@ -34,6 +34,7 @@ class ScoreModel(Model):
             subject_id=data['subject_id'])
         ScoreModel.check(score)
         session.add(score)
+        return ScoreModel.serialize(score)
 
     @staticmethod
     def update(session, score_id, data):
@@ -43,11 +44,13 @@ class ScoreModel(Model):
         score.student_id = data['student_id']
         score.subject_id = data['subject_id']
         ScoreModel.check(score)
+        return ScoreModel.serialize(score)
 
     @staticmethod
     def delete(session, score_id):
         score = session.query(ScoreModel).filter(ScoreModel.id == score_id).first()
         session.delete(score)
+        return ScoreModel.serialize(score)
 
     @staticmethod
     def serialize(obj):

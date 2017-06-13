@@ -19,17 +19,20 @@ class StudentModel(Model):
             fio=data['fio'],
             student_group_id=data['student_group_id'])
         session.add(student)
+        return StudentModel.serialize(student)
 
     @staticmethod
     def update(session, student_id, data):
         student = session.query(StudentModel).filter(StudentModel.id == student_id).first()
         student.fio = data['fio']
         student.student_group_id = data['student_group_id']
+        return StudentModel.serialize(student)
 
     @staticmethod
     def delete(session, student_id):
         student = session.query(StudentModel).filter(StudentModel.id == student_id).first()
         session.delete(student)
+        return StudentModel.serialize(student)
     
     @staticmethod
     def serialize(obj):

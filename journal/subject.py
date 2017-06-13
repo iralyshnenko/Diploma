@@ -17,17 +17,20 @@ class SubjectModel(Model):
     def create(session, data):
         subject = SubjectModel(name=data['name'], teacher_id=data['teacher_id'])
         session.add(subject)
+        return SubjectModel.serialize(subject)
 
     @staticmethod
     def update(session, subject_id, data):
         subject = session.query(SubjectModel).filter(SubjectModel.id == subject_id).first()
         subject.name = data['name']
         subject.teacher_id = data['teacher_id']
+        return SubjectModel.serialize(subject)
 
     @staticmethod
     def delete(session, subject_id):
         subject = session.query(SubjectModel).filter(SubjectModel.id == subject_id).first()
         session.delete(subject)
+        return SubjectModel.serialize(subject)
 
     @staticmethod
     def serialize(obj):

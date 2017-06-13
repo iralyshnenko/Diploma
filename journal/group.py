@@ -16,16 +16,19 @@ class GroupModel(Model):
     def create(session, data):
         group = GroupModel(name=data['name'])
         session.add(group)
+        return GroupModel.serialize(group)
 
     @staticmethod
     def update(session, group_id, data):
         group = session.query(GroupModel).filter(GroupModel.id == group_id).first()
         group.name = data['name']
+        return GroupModel.serialize(group)
 
     @staticmethod
     def delete(session, group_id):
         group = session.query(GroupModel).filter(GroupModel.id == group_id).first()
         session.delete(group)
+        return GroupModel.serialize(group)
 
     @staticmethod
     def serialize(obj):

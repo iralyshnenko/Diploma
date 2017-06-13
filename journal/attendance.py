@@ -21,6 +21,7 @@ class AttendanceModel(Model):
             student_id=data['student_id'],
             subject_id=data['subject_id'])
         session.add(attendance)
+        return AttendanceModel.serialize(attendance)
 
     @staticmethod
     def update(session, attendance_id, data):
@@ -28,11 +29,13 @@ class AttendanceModel(Model):
         attendance.attendance_date = data['attendance_date']
         attendance.student_id = data['student_id']
         attendance.subject_id = data['subject_id']
+        return AttendanceModel.serialize(attendance)
 
     @staticmethod
     def delete(session, attendance_id):
         attendance = session.query(AttendanceModel).filter(AttendanceModel.id == attendance_id).first()
         session.delete(attendance)
+        return AttendanceModel.serialize(attendance)
 
     @staticmethod
     def serialize(obj):
