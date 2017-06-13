@@ -81,16 +81,26 @@ class TestRESTApi(unittest.TestCase):
             'student_id': 1,
             'subject_id': 1
         }
+        url = '%s/score' % self.base_url
         self.__query("INSERT INTO student_group VALUES(1, '')")
         self.__query("INSERT INTO teacher VALUES(1, '', '', '')")
         self.__query("INSERT INTO student VALUES(1, '', 1)")
         self.__query("INSERT INTO subject VALUES(1, '', 1)")
         self.__testDomain(
-            url='%s/score' % self.base_url,
+            url=url,
             entity=entity,
             attributes_to_check=entity.keys(),
             key_to_change='percentage',
             new_value_for_key=91)
+        # Test score creation with incorrect international score
+        entity['international'] = 'z'
+        response = requests.post(url, json=entity)
+        self.assertEqual(response.status_code, 400)
+        # Test score creation with percentage, that does not correspond it's international score
+        entity['international'] = 'A'
+        entity['percentage'] = 32
+        response = requests.post(url, json=entity)
+        self.assertEqual(response.status_code, 400)
 
     def testAttendance(self):
         current_date, yesterday = self.__getTwoDates()
@@ -99,16 +109,26 @@ class TestRESTApi(unittest.TestCase):
             'student_id': 1,
             'subject_id': 1
         }
+        url = '%s/attendance' % self.base_url
         self.__query("INSERT INTO student_group VALUES(1, '')")
         self.__query("INSERT INTO teacher VALUES(1, '', '', '')")
         self.__query("INSERT INTO student VALUES(1, '', 1)")
         self.__query("INSERT INTO subject VALUES(1, '', 1)")
         self.__testDomain(
-            url='%s/attendance' % self.base_url,
+            url=url,
             entity=entity,
             attributes_to_check=entity.keys(),
             key_to_change='attendance_date',
             new_value_for_key=str(current_date))
+        # Test creation of two records with the same date
+        requests.post(url, json=entity)
+        response = requests.post(url, json=entity)
+        self.assertEqual(response.status_code, 400)
+        # Test creation of two records with the same date but for different students
+        self.__query("INSERT INTO student VALUES(2, '', 1)")
+        entity['student_id'] = 2
+        response = requests.post(url, json=entity)
+        self.assertEqual(response.status_code, 200)
 
     def testStudentPerformance(self):
         current_date, yesterday = self.__getTwoDates()
