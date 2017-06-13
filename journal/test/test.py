@@ -44,8 +44,6 @@ class TestRESTApi(unittest.TestCase):
 
     def testStudent(self):
         entity = {
-            'login': 'login',
-            'password': 'password',
             'fio': 'fio',
             'student_group_id': 1
         }
@@ -54,8 +52,8 @@ class TestRESTApi(unittest.TestCase):
             url='%s/student' % self.base_url,
             entity=entity,
             attributes_to_check=entity.keys(),
-            key_to_change='login',
-            new_value_for_key='some login')
+            key_to_change='fio',
+            new_value_for_key='some fio')
 
     def testSubject(self):
         entity = {
@@ -79,7 +77,7 @@ class TestRESTApi(unittest.TestCase):
         }
         self.__query("INSERT INTO student_group values(1, '')")
         self.__query("INSERT INTO teacher values(1, '', '', '')")
-        self.__query("INSERT INTO student values(1, '', '', '', 1)")
+        self.__query("INSERT INTO student values(1, '', 1)")
         self.__query("INSERT INTO subject values(1, '', 1)")
         self.__testDomain(
             url='%s/score' % self.base_url,
@@ -98,7 +96,7 @@ class TestRESTApi(unittest.TestCase):
         }
         self.__query("INSERT INTO student_group values(1, '')")
         self.__query("INSERT INTO teacher values(1, '', '', '')")
-        self.__query("INSERT INTO student values(1, '', '', '', 1)")
+        self.__query("INSERT INTO student values(1, '', 1)")
         self.__query("INSERT INTO subject values(1, '', 1)")
         self.__testDomain(
             url='%s/attendance' % self.base_url,

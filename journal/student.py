@@ -14,8 +14,6 @@ class StudentModel(Model):
     __tablename__ = 'student'
     
     id = Column(BIGINT, primary_key=True)
-    login = Column(VARCHAR(32))
-    password = Column(VARCHAR(32))
     fio = Column(VARCHAR(128))
     student_group_id = Column(BIGINT)
 
@@ -26,8 +24,6 @@ class StudentModel(Model):
     @staticmethod
     def create(session, data):
         student = StudentModel(
-            login=data['login'],
-            password=data['password'],
             fio=data['fio'],
             student_group_id=data['student_group_id'])
         session.add(student)
@@ -35,8 +31,6 @@ class StudentModel(Model):
     @staticmethod
     def update(session, student_id, data):
         student = session.query(StudentModel).filter(StudentModel.id == student_id).first()
-        student.login = data['login']
-        student.password = data['password']
         student.fio = data['fio']
         student.student_group_id = data['student_group_id']
 
@@ -49,8 +43,6 @@ class StudentModel(Model):
     def serialize(obj):
         return {
             'id': obj.id,
-            'login': obj.login,
-            'password': obj.password,
             'fio': obj.fio,
             'student_group_id': obj.student_group_id
         }
@@ -66,8 +58,6 @@ class StudentPerformanceModel(Model):
     __tablename__ = 'student_performance'
 
     id = Column(BIGINT, primary_key=True)
-    login = Column(VARCHAR(32))
-    password = Column(VARCHAR(32))
     fio = Column(VARCHAR(128))
     student_group_id = Column(BIGINT)
     attended_days = Column(BIGINT)
@@ -81,8 +71,6 @@ class StudentPerformanceModel(Model):
     def serialize(obj):
         return {
             'id': obj.id,
-            'login': obj.login,
-            'password': obj.password,
             'fio': obj.fio,
             'student_group_id': obj.student_group_id,
             'attended_days': obj.attended_days,

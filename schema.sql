@@ -16,8 +16,6 @@ CREATE TABLE IF NOT EXISTS teacher (
 
 CREATE TABLE IF NOT EXISTS student (
     id SERIAL PRIMARY KEY,
-    login VARCHAR(32) NOT NULL,
-    password VARCHAR(32) NOT NULL,
     fio VARCHAR(128) NOT NULL,
     student_group_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (student_group_id)
