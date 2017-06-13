@@ -11,6 +11,12 @@ class TeacherModel(Model):
     fio = Column(VARCHAR(length=128))
 
     @staticmethod
+    def isValid(session, login, password):
+        query = session.query(TeacherModel)
+        valid_teacher = query.filter(TeacherModel.login == login, TeacherModel.password == password).first()
+        return valid_teacher is not None
+
+    @staticmethod
     def getAll(session):
         return [TeacherModel.serialize(teacher) for teacher in session.query(TeacherModel).all()]
 

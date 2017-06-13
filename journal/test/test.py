@@ -13,11 +13,17 @@ class TestRESTApi(unittest.TestCase):
         application_executable = join(dirname(dirname(realpath(__file__))), 'attendance-journal.py')
         cls.application = Popen(['python', application_executable])
         cls.domains_to_clean = ['student_group', 'teacher', 'student', 'subject', 'score', 'attendance']
-        cls.base_url = 'http://localhost:8080'
+        cls.base_host = 'http://localhost:8080'
+        cls.base_url = '%s/api' % cls.base_host
         time.sleep(2)
 
     def setUp(self):
         self.__cleanDatabase()
+        self.authorization_parameters = ('login', 'password')
+        self.headers = {
+            'Authorization': ' '.join(self.authorization_parameters)
+        }
+        self.__query("INSERT INTO teacher VALUES(1, '%s', '%s', '')" % self.authorization_parameters)
 
     def tearDown(self):
         self.__cleanDatabase()
@@ -26,12 +32,24 @@ class TestRESTApi(unittest.TestCase):
         for domain in self.domains_to_clean:
             self.__query('DELETE FROM %s' % domain)
 
+    def testTeacherRegistration(self):
+        entity = {
+            'login': 'login',
+            'password': 'password',
+            'fio': 'fio'
+        }
+        url = '%s/auth/teacher/register' % self.base_host
+        response = requests.post(url, json=entity)
+        self.assertEqual(response.status_code, 200)
+        registered_teacher = response.json()
+        entity['id'] = registered_teacher['id']
+        self.assertDictEqual(registered_teacher, entity)
+
     def testGroup(self):
         entity = {'name': 'KI'}
         self.__testDomain(
             url='%s/group' % self.base_url,
             entity=entity,
-            attributes_to_check=entity.keys(),
             key_to_change='name',
             new_value_for_key='PI')
 
@@ -44,7 +62,6 @@ class TestRESTApi(unittest.TestCase):
         self.__testDomain(
             url='%s/teacher' % self.base_url,
             entity=entity,
-            attributes_to_check=entity.keys(),
             key_to_change='login',
             new_value_for_key='some login')
 
@@ -57,7 +74,6 @@ class TestRESTApi(unittest.TestCase):
         self.__testDomain(
             url='%s/student' % self.base_url,
             entity=entity,
-            attributes_to_check=entity.keys(),
             key_to_change='fio',
             new_value_for_key='some fio')
 
@@ -70,7 +86,6 @@ class TestRESTApi(unittest.TestCase):
         self.__testDomain(
             url='%s/subject' % self.base_url,
             entity=entity,
-            attributes_to_check=entity.keys(),
             key_to_change='name',
             new_value_for_key='value')
 
@@ -89,17 +104,16 @@ class TestRESTApi(unittest.TestCase):
         self.__testDomain(
             url=url,
             entity=entity,
-            attributes_to_check=entity.keys(),
             key_to_change='percentage',
             new_value_for_key=91)
         # Test score creation with incorrect international score
         entity['international'] = 'z'
-        response = requests.post(url, json=entity)
+        response = requests.post(url, json=entity, headers=self.headers)
         self.assertEqual(response.status_code, 400)
         # Test score creation with percentage, that does not correspond it's international score
         entity['international'] = 'A'
         entity['percentage'] = 32
-        response = requests.post(url, json=entity)
+        response = requests.post(url, json=entity, headers=self.headers)
         self.assertEqual(response.status_code, 400)
 
     def testAttendance(self):
@@ -117,17 +131,16 @@ class TestRESTApi(unittest.TestCase):
         self.__testDomain(
             url=url,
             entity=entity,
-            attributes_to_check=entity.keys(),
             key_to_change='attendance_date',
             new_value_for_key=str(current_date))
         # Test creation of two records with the same date
-        requests.post(url, json=entity)
-        response = requests.post(url, json=entity)
+        requests.post(url, json=entity, headers=self.headers)
+        response = requests.post(url, json=entity, headers=self.headers)
         self.assertEqual(response.status_code, 400)
         # Test creation of two records with the same date but for different students
         self.__query("INSERT INTO student VALUES(2, '', 1)")
         entity['student_id'] = 2
-        response = requests.post(url, json=entity)
+        response = requests.post(url, json=entity, headers=self.headers)
         self.assertEqual(response.status_code, 200)
 
     def testStudentPerformance(self):
@@ -156,25 +169,25 @@ class TestRESTApi(unittest.TestCase):
     def __query(self, query):
         return call(['mysql', '-u', 'root', '-p12345', 'attendance_journal', '-e', query])
 
-    def __testDomain(self, url, entity, attributes_to_check, key_to_change, new_value_for_key):
+    def __testDomain(self, url, entity, key_to_change, new_value_for_key):
         # Test POST request
-        response = requests.post(url, json=entity)
+        response = requests.post(url, json=entity, headers=self.headers)
         self.assertEqual(response.status_code, 200)
         # Test GET request
-        response = requests.get(url)
-        inserted_entity = response.json()[0]
-        for attribute in attributes_to_check:
-            self.assertEqual(entity[attribute], inserted_entity[attribute])
+        response = requests.get(url, headers=self.headers)
+        inserted_entity = response.json().pop()
+        entity['id'] = inserted_entity['id']
+        self.assertDictEqual(inserted_entity, entity)
         entity = inserted_entity
         # Test PUT request
         item_url = '%s/%d' % (url, entity['id'])
         entity[key_to_change] = new_value_for_key
-        response = requests.put(item_url, json=entity)
+        response = requests.put(item_url, json=entity, headers=self.headers)
         self.assertEqual(response.status_code, 200)
         result = response.json()
         self.assertDictEqual(entity, result)
         # Test DELETE request
-        response = requests.delete(item_url)
+        response = requests.delete(item_url, headers=self.headers)
         self.assertEqual(response.status_code, 200)
         result = response.json()
         self.assertDictEqual(result, entity)
