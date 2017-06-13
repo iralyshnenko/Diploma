@@ -2,7 +2,14 @@ from sqlalchemy import Column, BIGINT, CHAR, SMALLINT
 from lib.database import Model
 
 
-INTERNATIONAL_SCORE_VALUES = ['A', 'B', 'C', 'D', 'E', 'F']
+SCORE_VALUES = {
+    'A': lambda percentage: 100 >= percentage > 90,
+    'B': lambda percentage: 89 >= percentage > 80,
+    'C': lambda percentage: 79 >= percentage > 70,
+    'D': lambda percentage: 69 >= percentage > 60,
+    'E': lambda percentage: 59 >= percentage > 0,
+    'F': lambda percentage: 59 >= percentage > 0
+}
 
 
 class ScoreModel(Model):
@@ -16,10 +23,9 @@ class ScoreModel(Model):
 
     @staticmethod
     def check(score):
-        if score.international not in INTERNATIONAL_SCORE_VALUES:
-            raise ValueError('"international" attribute value is incorrect')
-        if score.percentage < 0 or score.percentage > 100:
-            raise ValueError('"percentage" attribute value is incorrect')
+        percentage_corresponds_international = SCORE_VALUES[score.international]
+        if not percentage_corresponds_international(score.percentage):
+            raise ValueError('"percentage" attribute value does not correspond to "international" value')
 
     @staticmethod
     def getAll(session):
