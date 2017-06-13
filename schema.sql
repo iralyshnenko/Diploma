@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS attendance (
     attendance_date DATE NOT NULL,
     student_id BIGINT UNSIGNED NOT NULL,
     subject_id BIGINT UNSIGNED NOT NULL,
-    UNIQUE(attendance_date),
+    UNIQUE(attendance_date, student_id, subject_id),
     FOREIGN KEY (student_id)
         REFERENCES student(id)
         ON DELETE CASCADE
