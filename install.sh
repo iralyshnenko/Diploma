@@ -7,4 +7,4 @@ sudo apt-get install -y mysql-server mysql-client
 sudo mysql -p12345 < schema.sql
 sudo apt-get install -y python-pip python-dev libmysqlclient-dev
 sudo pip install flask sqlalchemy MySQL-python requests
-python test/test.py
+python journal/test/test.py
