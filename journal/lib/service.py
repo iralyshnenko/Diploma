@@ -31,9 +31,9 @@ class Service(ReadOnlyService):
         web_server.add_url_rule(self.object_url, 'delete_%s' % entity_name, self.delete, methods=['DELETE'])
 
     def __processWriteRequest(self, model_callback):
-        success = self.db_session.doWriteQuery(model_callback)
-        if success:
-            return ''
+        result = self.db_session.doWriteQuery(model_callback)
+        if result is not None:
+            return result
         else:
             abort(400)
 
