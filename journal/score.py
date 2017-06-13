@@ -4,6 +4,9 @@ from lib.database import Model
 from lib.service import Service
 
 
+INTERNATIONAL_SCORE_VALUES = ['A', 'B', 'C', 'D', 'E', 'F']
+
+
 class Score(Service):
 
     def __init__(self, web_server, db_session):
@@ -20,6 +23,13 @@ class ScoreModel(Model):
     subject_id = Column(BIGINT)
 
     @staticmethod
+    def check(score):
+        if score.international not in INTERNATIONAL_SCORE_VALUES:
+            raise ValueError('"international" attribute value is incorrect')
+        if score.percentage < 0 or score.percentage > 100:
+            raise ValueError('"percentage" attribute value is incorrect')
+
+    @staticmethod
     def getAll(session):
         return json.dumps([ScoreModel.serialize(score) for score in session.query(ScoreModel).all()])
 
@@ -30,6 +40,7 @@ class ScoreModel(Model):
             percentage=data['percentage'],
             student_id=data['student_id'],
             subject_id=data['subject_id'])
+        ScoreModel.check(score)
         session.add(score)
 
     @staticmethod
@@ -39,6 +50,7 @@ class ScoreModel(Model):
         score.percentage = data['percentage']
         score.student_id = data['student_id']
         score.subject_id = data['subject_id']
+        ScoreModel.check(score)
 
     @staticmethod
     def delete(session, score_id):
