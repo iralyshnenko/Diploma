@@ -1,4 +1,3 @@
-import json
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -16,14 +15,14 @@ class SessionFactory(object):
 
     def doReadQuery(self, query):
         session = self.Session()
-        result = json.dumps(query(session))
+        result = query(session)
         session.close()
         return result
 
     def doWriteQuery(self, query):
         session = self.Session()
         try:
-            result = json.dumps(query(session))
+            result = query(session)
             session.commit()
         except:
             result = None
