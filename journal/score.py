@@ -1,16 +1,9 @@
 import json
 from sqlalchemy import Column, BIGINT, CHAR, SMALLINT
 from lib.database import Model
-from lib.service import Service
 
 
 INTERNATIONAL_SCORE_VALUES = ['A', 'B', 'C', 'D', 'E', 'F']
-
-
-class Score(Service):
-
-    def __init__(self, web_server, db_session):
-        Service.__init__(self, web_server, db_session, entity_name='score', entity=ScoreModel)
 
 
 class ScoreModel(Model):

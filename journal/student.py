@@ -1,13 +1,6 @@
 import json
 from sqlalchemy import Column, BIGINT, VARCHAR, FLOAT
 from lib.database import Model
-from lib.service import Service, ReadOnlyService
-
-
-class Student(Service):
-    
-    def __init__(self, web_server, db_session):
-        Service.__init__(self, web_server, db_session, entity_name='student', entity=StudentModel)
     
     
 class StudentModel(Model):
@@ -46,12 +39,6 @@ class StudentModel(Model):
             'fio': obj.fio,
             'student_group_id': obj.student_group_id
         }
-
-
-class StudentPerformance(ReadOnlyService):
-
-    def __init__(self, web_server, db_session):
-        ReadOnlyService.__init__(self, web_server, db_session, entity_name='student_performance', entity=StudentPerformanceModel)
 
 
 class StudentPerformanceModel(Model):

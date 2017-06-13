@@ -1,13 +1,6 @@
 import json
 from sqlalchemy import Column, BIGINT, VARCHAR
 from lib.database import Model
-from lib.service import Service
-
-
-class Teacher(Service):
-
-    def __init__(self, web_server, db_session):
-        Service.__init__(self, web_server, db_session, entity_name='teacher', entity=TeacherModel)
 
 
 class TeacherModel(Model):

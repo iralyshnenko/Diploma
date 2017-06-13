@@ -4,12 +4,13 @@ import sys
 
 from flask import Flask
 
-from group import Group
-from teacher import Teacher
-from student import Student, StudentPerformance
-from subject import Subject
-from score import Score
-from attendance import Attendance
+from group import GroupModel
+from teacher import TeacherModel
+from student import StudentModel, StudentPerformanceModel
+from subject import SubjectModel
+from score import ScoreModel
+from attendance import AttendanceModel
+from lib.service import Service, ReadOnlyService
 from lib.config import Config
 from lib.database import SessionFactory
 
@@ -42,13 +43,13 @@ class AttendanceJournal(object):
         print 'Initializing Flask'
         self.web_server = Flask(__name__)
         print 'Initializing application modules'
-        self.group = Group(self.web_server, self.db_session)
-        self.teacher = Teacher(self.web_server, self.db_session)
-        self.student = Student(self.web_server, self.db_session)
-        self.subject = Subject(self.web_server, self.db_session)
-        self.score = Score(self.web_server, self.db_session)
-        self.attendance = Attendance(self.web_server, self.db_session)
-        self.student_performance = StudentPerformance(self.web_server, self.db_session)
+        self.group = Service(self.web_server, self.db_session, entity_name='group', entity=GroupModel)
+        self.teacher = Service(self.web_server, self.db_session, entity_name='teacher', entity=TeacherModel)
+        self.student = Service(self.web_server, self.db_session, entity_name='student', entity=StudentModel)
+        self.subject = Service(self.web_server, self.db_session, entity_name='subject', entity=SubjectModel)
+        self.score = Service(self.web_server, self.db_session, entity_name='score', entity=ScoreModel)
+        self.attendance = Service(self.web_server, self.db_session, entity_name='attendance', entity=AttendanceModel)
+        self.student_performance = ReadOnlyService(self.web_server, self.db_session, entity_name='student_performance', entity=StudentPerformanceModel)
         print 'Starting Flask'
         self.web_server.run(host=configuration['web_host'], port=configuration['web_port'])
 
