@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS teacher (
     id SERIAL PRIMARY KEY,
     login VARCHAR(32) NOT NULL,
     password VARCHAR(32) NOT NULL,
-    fio VARCHAR(128) NOT NULL
+    fio VARCHAR(128) NOT NULL,
+    UNIQUE(login)
 );
 
 CREATE TABLE IF NOT EXISTS student (
