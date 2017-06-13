@@ -63,5 +63,5 @@ class StudentPerformanceModel(Model):
             'fio': obj.fio,
             'student_group_id': obj.student_group_id,
             'attended_days': obj.attended_days,
-            'performance': obj.performance
+            'performance': float(obj.performance)
         }

@@ -16,7 +16,13 @@ class TestRESTApi(unittest.TestCase):
         cls.base_url = 'http://localhost:8080'
         time.sleep(2)
 
+    def setUp(self):
+        self.__cleanDatabase()
+
     def tearDown(self):
+        self.__cleanDatabase()
+
+    def __cleanDatabase(self):
         for domain in self.domains_to_clean:
             self.__query('DELETE FROM %s' % domain)
 
@@ -47,7 +53,7 @@ class TestRESTApi(unittest.TestCase):
             'fio': 'fio',
             'student_group_id': 1
         }
-        self.__query("INSERT INTO student_group values(1, '')")
+        self.__query("INSERT INTO student_group VALUES(1, '')")
         self.__testDomain(
             url='%s/student' % self.base_url,
             entity=entity,
@@ -60,7 +66,7 @@ class TestRESTApi(unittest.TestCase):
             'name': 'subject',
             'teacher_id': 1
         }
-        self.__query("INSERT INTO teacher values(1, '', '', '')")
+        self.__query("INSERT INTO teacher VALUES(1, '', '', '')")
         self.__testDomain(
             url='%s/subject' % self.base_url,
             entity=entity,
@@ -71,33 +77,32 @@ class TestRESTApi(unittest.TestCase):
     def testScore(self):
         entity = {
             'international': 'A',
-            'percentage': 15,
+            'percentage': 98,
             'student_id': 1,
             'subject_id': 1
         }
-        self.__query("INSERT INTO student_group values(1, '')")
-        self.__query("INSERT INTO teacher values(1, '', '', '')")
-        self.__query("INSERT INTO student values(1, '', 1)")
-        self.__query("INSERT INTO subject values(1, '', 1)")
+        self.__query("INSERT INTO student_group VALUES(1, '')")
+        self.__query("INSERT INTO teacher VALUES(1, '', '', '')")
+        self.__query("INSERT INTO student VALUES(1, '', 1)")
+        self.__query("INSERT INTO subject VALUES(1, '', 1)")
         self.__testDomain(
             url='%s/score' % self.base_url,
             entity=entity,
             attributes_to_check=entity.keys(),
-            key_to_change='international',
-            new_value_for_key='B')
+            key_to_change='percentage',
+            new_value_for_key=91)
 
     def testAttendance(self):
-        current_date = date.today()
-        yesterday = current_date.replace(day=current_date.day - 1)
+        current_date, yesterday = self.__getTwoDates()
         entity = {
             'attendance_date': str(yesterday),
             'student_id': 1,
             'subject_id': 1
         }
-        self.__query("INSERT INTO student_group values(1, '')")
-        self.__query("INSERT INTO teacher values(1, '', '', '')")
-        self.__query("INSERT INTO student values(1, '', 1)")
-        self.__query("INSERT INTO subject values(1, '', 1)")
+        self.__query("INSERT INTO student_group VALUES(1, '')")
+        self.__query("INSERT INTO teacher VALUES(1, '', '', '')")
+        self.__query("INSERT INTO student VALUES(1, '', 1)")
+        self.__query("INSERT INTO subject VALUES(1, '', 1)")
         self.__testDomain(
             url='%s/attendance' % self.base_url,
             entity=entity,
@@ -106,7 +111,27 @@ class TestRESTApi(unittest.TestCase):
             new_value_for_key=str(current_date))
 
     def testStudentPerformance(self):
-        pass
+        current_date, yesterday = self.__getTwoDates()
+        first_score = 100
+        second_score = 92
+        self.__query("INSERT INTO student_group VALUES(1, '')")
+        self.__query("INSERT INTO student VALUES(1, '', 1)")
+        self.__query("INSERT INTO teacher VALUES(1, '', '', '')")
+        self.__query("INSERT INTO subject VALUES(1, '', 1)")
+        self.__query("INSERT INTO attendance VALUES(1, '%s', 1, 1)" % str(current_date))
+        self.__query("INSERT INTO attendance VALUES(2, '%s', 1, 1)" % str(yesterday))
+        self.__query("INSERT INTO score VALUES(1, 'A', %d, 1, 1)" % first_score)
+        self.__query("INSERT INTO score VALUES(2, 'A', %d, 1, 1)" % second_score)
+        url = '%s/student_performance' % self.base_url
+        response = requests.get(url)
+        performance = response.json()[0]
+        self.assertEqual(performance['attended_days'], 2)
+        self.assertEqual(performance['performance'], (first_score + second_score) / 2)
+
+    def __getTwoDates(self):
+        current_date = date.today()
+        yesterday = current_date.replace(day=current_date.day - 1)
+        return current_date, yesterday
 
     def __query(self, query):
         return call(['mysql', '-u', 'root', '-p12345', 'attendance_journal', '-e', query])

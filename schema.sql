@@ -66,8 +66,12 @@ CREATE TABLE IF NOT EXISTS attendance (
         ON UPDATE CASCADE
 );
 
-CREATE OR REPLACE VIEW student_performance AS
-SELECT student.*, COUNT(attendance.id) as attended_days, AVG(score.percentage) as performance
-FROM student, attendance, score
-WHERE attendance.student_id = student.id AND score.student_id = student.id
+CREATE VIEW student_performance AS
+SELECT student.*, attendance.attended_days, AVG(score.percentage) as performance
+FROM student, score, (
+    SELECT student_id, COUNT(*) as attended_days
+    FROM attendance
+    GROUP BY student_id
+) as attendance
+WHERE student.id = score.student_id AND student.id = attendance.student_id
 GROUP BY student.id;
