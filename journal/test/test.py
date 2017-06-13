@@ -126,14 +126,13 @@ class TestRESTApi(unittest.TestCase):
         entity[key_to_change] = new_value_for_key
         response = requests.put(item_url, json=entity)
         self.assertEqual(response.status_code, 200)
-        response = requests.get(url)
-        result = response.json()[0]
+        result = response.json()
         self.assertDictEqual(entity, result)
         # Test DELETE request
         response = requests.delete(item_url)
         self.assertEqual(response.status_code, 200)
-        response = requests.get(url)
-        self.assertListEqual(response.json(), [])
+        result = response.json()
+        self.assertDictEqual(result, entity)
 
     @classmethod
     def tearDownClass(cls):
