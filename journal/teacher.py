@@ -1,4 +1,3 @@
-import json
 from sqlalchemy import Column, BIGINT, VARCHAR
 from lib.database import Model
 
@@ -13,7 +12,7 @@ class TeacherModel(Model):
 
     @staticmethod
     def getAll(session):
-        return json.dumps([TeacherModel.serialize(teacher) for teacher in session.query(TeacherModel).all()])
+        return [TeacherModel.serialize(teacher) for teacher in session.query(TeacherModel).all()]
 
     @staticmethod
     def create(session, data):

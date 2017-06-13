@@ -1,4 +1,3 @@
-import json
 from sqlalchemy import Column, BIGINT, CHAR, SMALLINT
 from lib.database import Model
 
@@ -24,7 +23,7 @@ class ScoreModel(Model):
 
     @staticmethod
     def getAll(session):
-        return json.dumps([ScoreModel.serialize(score) for score in session.query(ScoreModel).all()])
+        return [ScoreModel.serialize(score) for score in session.query(ScoreModel).all()]
 
     @staticmethod
     def create(session, data):

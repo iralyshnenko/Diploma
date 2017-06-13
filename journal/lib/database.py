@@ -16,7 +16,7 @@ class SessionFactory(object):
 
     def doReadQuery(self, query):
         session = self.Session()
-        result = query(session)
+        result = json.dumps(query(session))
         session.close()
         return result
 

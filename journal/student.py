@@ -1,4 +1,3 @@
-import json
 from sqlalchemy import Column, BIGINT, VARCHAR, FLOAT
 from lib.database import Model
     
@@ -12,7 +11,7 @@ class StudentModel(Model):
 
     @staticmethod
     def getAll(session):
-        return json.dumps([StudentModel.serialize(student) for student in session.query(StudentModel).all()])
+        return [StudentModel.serialize(student) for student in session.query(StudentModel).all()]
 
     @staticmethod
     def create(session, data):
@@ -52,7 +51,7 @@ class StudentPerformanceModel(Model):
 
     @staticmethod
     def getAll(session):
-        return json.dumps([StudentPerformanceModel.serialize(student_performance) for student_performance in session.query(StudentPerformanceModel).all()])
+        return [StudentPerformanceModel.serialize(student_performance) for student_performance in session.query(StudentPerformanceModel).all()]
 
     @staticmethod
     def serialize(obj):

@@ -1,4 +1,3 @@
-import json
 from sqlalchemy import Column, BIGINT, VARCHAR
 from lib.database import Model
 
@@ -11,7 +10,7 @@ class GroupModel(Model):
 
     @staticmethod
     def getAll(session):
-        return json.dumps([GroupModel.serialize(group) for group in session.query(GroupModel).all()])
+        return [GroupModel.serialize(group) for group in session.query(GroupModel).all()]
 
     @staticmethod
     def create(session, data):

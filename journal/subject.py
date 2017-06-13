@@ -1,4 +1,3 @@
-import json
 from sqlalchemy import Column, BIGINT, VARCHAR
 from lib.database import Model
 
@@ -12,7 +11,7 @@ class SubjectModel(Model):
 
     @staticmethod
     def getAll(session):
-        return json.dumps([SubjectModel.serialize(subject) for subject in session.query(SubjectModel).all()])
+        return [SubjectModel.serialize(subject) for subject in session.query(SubjectModel).all()]
 
     @staticmethod
     def create(session, data):

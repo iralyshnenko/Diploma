@@ -1,4 +1,3 @@
-import json
 from sqlalchemy import Column, BIGINT, DATE
 from lib.database import Model
 
@@ -13,7 +12,7 @@ class AttendanceModel(Model):
 
     @staticmethod
     def getAll(session):
-        return json.dumps([AttendanceModel.serialize(attendance) for attendance in session.query(AttendanceModel).all()])
+        return [AttendanceModel.serialize(attendance) for attendance in session.query(AttendanceModel).all()]
 
     @staticmethod
     def create(session, data):
