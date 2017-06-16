@@ -34,8 +34,8 @@ class TestRESTApi(unittest.TestCase):
 
     def testTeacherRegistration(self):
         entity = {
-            'login': 'login',
-            'password': 'password',
+            'login': 'login1',
+            'password': 'password1',
             'fio': 'fio'
         }
         url = '%s/auth/teacher/register' % self.base_host
@@ -55,8 +55,8 @@ class TestRESTApi(unittest.TestCase):
 
     def testTeacher(self):
         entity = {
-            'login': 'login',
-            'password': 'password',
+            'login': 'login1',
+            'password': 'password1',
             'fio': 'fio'
         }
         self.__testDomain(
