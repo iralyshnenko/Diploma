@@ -12,3 +12,5 @@ sudo mysql -p12345 < schema.sql
 sudo apt-get install -y python-pip python-dev libmysqlclient-dev
 sudo pip install flask sqlalchemy MySQL-python requests
 python journal/test/test.py
+python journal/manager.py clear
+python journal/manager.py init
