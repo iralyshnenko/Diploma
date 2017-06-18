@@ -1,0 +1,20 @@
+<div layout="column" layout-padding layout-align="center" layout-align-gt-md="center center">
+    <div md-whiteframe="1" layout="column" layout-padding md-colors="{background: 'grey-A100'}">
+        <div layout="column">
+            <h3>Login</h3>
+            <p ng-show="showErrorMessage()" md-colors="{color: 'red'}">{{errorMessage}}</p>
+            <md-input-container>
+                <label>Login</label>
+                <input ng-model="login"/>
+            </md-input-container>
+            <md-input-container>
+                <label>Password</label>
+                <input ng-model="password" type="password"/>
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <md-button ng-click="authorize()" class="md-raised md-primary">Login</md-button>
+            <md-button ng-click="back()">Cancel</md-button>
+        </div>
+    </div>
+</div>

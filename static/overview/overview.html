@@ -1,0 +1,28 @@
+<div layout="row" layout-align="center center" layout-margin>
+    <div>
+        <h5>{{entity.prettyEntityName}}</h5>
+        <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+            <thread>
+                <tr>
+                    <th ng-repeat="attribute in entity.attributes" ng-class="getRowClass(attribute)">
+                        {{formatValue(attribute)}}
+                    </th>
+                </tr>
+            </thread>
+            <tbody>
+            <tr ng-repeat="obj in dataList">
+                <td
+                        ng-repeat="attribute in entity.attributes"
+                        ng-class="getRowClass(obj[attribute])"
+                        ng-click="showActionsMenu(obj)">
+                    {{obj[attribute]}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<md-button ng-hide="entity.isReadOnly" ng-click="createEntity()" class="md-fab md-primary md-fab-bottom-right">
+    <md-tooltip>Create {{entity.prettyEntityName}}</md-tooltip>
+    <md-icon class="material-icons">add</md-icon>
+</md-button>

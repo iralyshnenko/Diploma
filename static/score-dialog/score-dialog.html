@@ -1,0 +1,25 @@
+<md-dialog>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <p>Choose subject and score</p>
+            <div layout="column" flex>
+                <md-input-container>
+                    <label>Subject</label>
+                    <md-select ng-model="selectedSubject">
+                        <md-option ng-repeat="subject in subjects" ng-value="subject">{{subject.name}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-slider-container>
+                    <md-slider min="0" max="100" ng-model="percentage"></md-slider>
+                    <md-input-container>
+                        <input type="number" ng-model="percentage" disabled>
+                    </md-input-container>
+                </md-slider-container>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="confirm()" class="md-primary md-raised">Confirm</md-button>
+        <md-button ng-click="cancel()">Cancel</md-button>
+    </md-dialog-actions>
+</md-dialog>

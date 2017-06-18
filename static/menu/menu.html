@@ -1,0 +1,10 @@
+<md-bottom-sheet class="md-list">
+    <md-list ng-cloak>
+        <md-list-item ng-repeat="item in actions">
+            <md-button ng-click="doAction(item.action)" class="md-list-item-content">
+                <md-icon class="material-icons">{{item.icon}}</md-icon>
+                <span class="md-inline-list-icon-label">{{item.name}}</span>
+            </md-button>
+        </md-list-item>
+    </md-list>
+</md-bottom-sheet>

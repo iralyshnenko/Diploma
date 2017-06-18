@@ -1,0 +1,98 @@
+<html lang="en" >
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Angular Material style sheet -->
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <style>
+        body {
+            overflow: hidden;
+        }
+        td:focus {
+            outline: none;
+        }
+    </style>
+    <body ng-app="AttendanceJournal" layout="column" ng-cloak>
+        <!--
+          Your HTML content here
+        -->
+        <md-sidenav class="md-sidenav-left" md-component-id="side-navigation" md-whiteframe="4">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h1>Attendance Journal</h1>
+                </div>
+            </md-toolbar>
+            <md-content ng-controller="HeaderController">
+                <md-list>
+                    <md-list-item ng-href="#/" ng-click="toggleSideBar()">
+                        <md-icon class="material-icons">grade</md-icon>
+                        <p>Students performance</p>
+                    </md-list-item>
+                    <md-list-item ng-href="#/group/overview" ng-click="toggleSideBar()">
+                        <md-icon class="material-icons">group_work</md-icon>
+                        <p>Groups</p>
+                    </md-list-item>
+                    <md-list-item ng-href="#/student/overview" ng-click="toggleSideBar()">
+                        <md-icon class="material-icons">account_circle</md-icon>
+                        <p>Students</p>
+                    </md-list-item>
+                    <md-list-item ng-href="#/teacher/overview" ng-click="toggleSideBar()">
+                        <md-icon class="material-icons">account_box</md-icon>
+                        <p>Teachers</p>
+                    </md-list-item>
+                    <md-list-item ng-href="#/subject/overview" ng-click="toggleSideBar()">
+                        <md-icon class="material-icons">subject</md-icon>
+                        <p>Subjects</p>
+                    </md-list-item>
+                </md-list>
+            </md-content>
+        </md-sidenav>
+        <md-toolbar ng-controller="HeaderController">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" ng-click="toggleSideBar()">
+                    <md-icon class="material-icons">menu</md-icon>
+                </md-button>
+                <div flex></div>
+                <md-button ng-hide="auth.isAuthorized()" ng-href="#/login">Sign In</md-button>
+                <md-button ng-hide="auth.isAuthorized()" ng-href="#/register">Sign Up</md-button>
+                <span ng-show="auth.isAuthorized()">{{auth.fio}}</span>
+                <md-button class="md-icon-button"
+                           ng-show="auth.isAuthorized()"
+                           ng-click="auth.logout()">
+                    <md-tooltip>Logout</md-tooltip>
+                    <md-icon class="material-icons">exit_to_app</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content flex ng-view md-colors="{background: 'grey-200'}">
+        </md-content>
+
+        <!-- Angular Material requires Angular.js Libraries -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+        <script src="app.js"></script>
+        <script src="shared/api.js"></script>
+        <script src="login/login.js"></script>
+        <script src="register/register.js"></script>
+        <script src="edit/edit.js"></script>
+        <script src="overview/overview.js"></script>
+        <script src="menu/menu.js"></script>
+        <script src="attendance-dialog/attendance-dialog.js"></script>
+        <script src="score-dialog/score-dialog.js"></script>
+    </body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at https://material.angularjs.org/license.
+-->
