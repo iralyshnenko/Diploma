@@ -9,7 +9,7 @@ import requests
 import subprocess
 
 URL = 'http://localhost:8080%s'
-AMOUNT = 40
+AMOUNT = 80
 
 GROUP_NAMES = ['KI', 'FGPIT', 'IBF', 'OEF', 'FK', 'FEF', 'XT', 'EM', 'TK', 'PE', 'VT', 'RA', 'PI']
 PEOPLE_NAMES = ['Tom', 'Frank', 'Peter', 'Sam', 'Michael', 'Carol', 'Chris', 'Elizabeth', 'Vira', 'Samanta', 'Veronica',
