@@ -77,4 +77,4 @@ FROM student, score, (
 ) as attendance
 WHERE student.id = score.student_id AND student.id = attendance.student_id
 GROUP BY student.id
-ORDER BY attendance.attended_days DESC, performance DESC;
+ORDER BY performance DESC, attendance.attended_days DESC;
