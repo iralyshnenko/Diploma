@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS attendance_journal;
 CREATE DATABASE IF NOT EXISTS attendance_journal;
 
 USE attendance_journal;
@@ -75,4 +76,5 @@ FROM student, score, (
     GROUP BY student_id
 ) as attendance
 WHERE student.id = score.student_id AND student.id = attendance.student_id
-GROUP BY student.id;
+GROUP BY student.id
+ORDER BY attendance.attended_days DESC, performance DESC;
