@@ -33,8 +33,8 @@ class AuthorizableService(BaseService):
             try:
                 authorization_data = request.headers['Authorization']
                 login, password = authorization_data.split(' ')
-                entity = self.db_session.doReadQuery(lambda session: model.isValid(session, login, password))
-                if entity is None:
+                entity_exists = self.db_session.doReadQuery(lambda session: model.isValid(session, login, password))
+                if not entity_exists:
                     raise Exception('Entity is not valid')
             except Exception:
                 abort(401)
